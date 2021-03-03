@@ -1,10 +1,10 @@
 # Программа сервера для отправки приветствия сервера и получения ответа
 from socket import *
 from click import command, option
-import time
+from datetime import datetime
 
 import json
-from jim import jim
+from jim import Jim
 
 CODE = 'utf-8'
 
@@ -15,7 +15,7 @@ CODE = 'utf-8'
 @option('-p', default=7780, help='< port > — TCP-порт для работы(по умолчанию использует 7777)')
 def run_process(a=None, p=None):
     MessengerClient((a, p), 'vladimr', '123456').processing_action(
-        'action:presence', 'I`m here')
+        'action:presence', 'I`m here', datetime.now().timestamp())
 
 
 class MessengerClient:
@@ -40,13 +40,13 @@ class MessengerClient:
                 bite_cnd = len(received_message.encode(CODE))
                 print(
                     f'Сообщение от сервера:{received_message}. Длина сообщения {bite_cnd} байт')
-            self.__close
+            self.__close()
 
     def get_data(self, method, msg=''):
         # Формирования пакета данных
         if method == 'action:presence':
             # присутствие. Сервисное сообщение для извещения сервера о присутствии клиента online
-            return jim(self.username, self.password).presence(msg)
+            return Jim(self.username, self.password).presence(msg)
         elif method == 'action:prоbe':
             # проверка присутствия. Сервисное сообщение от сервера для проверки присутствии клиента online
             pass
@@ -81,7 +81,6 @@ class MessengerClient:
 
         return received_message
 
-    @property
     def __close(self):
         try:
             self.__socket.close()

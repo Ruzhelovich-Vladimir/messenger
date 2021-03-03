@@ -27,13 +27,13 @@ MSG_GROUP_LST = {
 }
 
 
-class jim:
+class Jim:
 
-    def __init__(self, account_name, password):
+    def __init__(self, account_name, password, action_time=datetime.now().timestamp()):
 
         self.account_name = account_name
         self.password = password
-        self.action_time = datetime.now().timestamp()
+        self.action_time = action_time
 
     def __get_msg(self, code):
 
@@ -95,7 +95,7 @@ class jim:
         }
 
     @property
-    def quit():
+    def quit(self):
         # Выхода
         return {
             "action": "quit"
@@ -103,5 +103,5 @@ class jim:
 
 
 if __name__ == '__main__':
-    res_json = jim('test', 'password').get_auth
+    res_json = Jim('test', 'password').get_auth
     print(res_json)

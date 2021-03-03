@@ -4,10 +4,7 @@ import json
 from socket import *
 from click.decorators import command, option
 
-from jim import jim
-
 CODE = 'utf-8'
-
 
 @command()
 @option('-a', default='', help='< addr > — IP-адрес для прослушивания \
@@ -21,17 +18,15 @@ class MessengerServer:
 
     def __init__(self, host):
 
-        with socket(AF_INET, SOCK_STREAM) as self.__socket:  # Создает сокет TCP
-            self.__socket.bind(host)  # Присваивает порт 8007
-            self.__socket.listen()  # Слушаем порт
-            self.__run_processing  # Обрабатываем сообщения
+        self.__socket = socket(AF_INET, SOCK_STREAM)
+        self.__socket.bind(host)  # Присваивает порт 8007
+        self.__socket.listen()  # Слушаем порт
+        self.__run_processing()  # Обрабатываем сообщения
 
-    @property
     def __run_processing(self):
 
         while True:
             client, addr = self.__socket.accept()
-            # with closing(client) as cl:
             self.__process_client(client, addr)
 
     def __process_client(self, client, addr):
